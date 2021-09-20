@@ -16,19 +16,25 @@ import 'package:task_04_navigation/unit.dart';
 class ConverterRoute extends StatelessWidget {
   /// Units for this [Category].
   final List<Unit> units;
+  final Color color;
 
   /// This [ConverterRoute] requires the color and units to not be null.
   // TODO: Pass in the [Category]'s color
   const ConverterRoute({
     @required this.units,
-  }) : assert(units != null);
+    @required this.color,
+  })  : assert(units != null),
+        assert(color != null);
 
   @override
   Widget build(BuildContext context) {
+    //pegar primeira palavra
+    List<String> wordTitle = units[0].name.split(" ");
     // Here is just a placeholder for a list of mock units
     final unitWidgets = units.map((Unit unit) {
       // TODO: Set the color for this Container
       return Container(
+        color: color,
         margin: EdgeInsets.all(8.0),
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -46,8 +52,17 @@ class ConverterRoute extends StatelessWidget {
       );
     }).toList();
 
-    return ListView(
-      children: unitWidgets,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: color,
+        title: Text(wordTitle[0], style: TextStyle(fontSize: 28, color: Colors.black, fontWeight:  FontWeight.normal),),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: ListView(
+        children: unitWidgets,
+      ),
     );
   }
 }
