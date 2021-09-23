@@ -35,6 +35,7 @@ class ConverterRoute extends StatefulWidget {
 class _ConverterRouteState extends State<ConverterRoute> {
   // TODO: Set some variables, such as for keeping track of the user's input
   // value and units
+  String dropdownDefaultValue = "TestOption";
 
   // TODO: Determine whether you need to override anything, such as initState()
 
@@ -60,37 +61,132 @@ class _ConverterRouteState extends State<ConverterRoute> {
   Widget build(BuildContext context) {
     // TODO: Create the 'input' group of widgets. This is a Column that
     // includes the input value, and 'from' unit [Dropdown].
+    final input = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: TextField(
+            keyboardType: TextInputType.number,
+            style: Theme.of(context).textTheme.bodyText1,
+            decoration: InputDecoration(
+                labelText: 'Input',
+                labelStyle: Theme.of(context).textTheme.bodyText1,
+                // errorText:
+                //     _showValidationError ? 'invalid number entered' : null,
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(7))),
+          ),
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        Container(
+          padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(7)),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton(
+              icon: Icon(Icons.arrow_drop_down),
+              value: "One",
+              isExpanded: true,
+              style: const TextStyle(color: Colors.black),
+              onChanged: (String newValue) {
+                setState(() {
+                  dropdownDefaultValue = newValue;
+                });
+              },
+              items: <String>['One', 'Two', 'Free', 'Four']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+
+
 
     // TODO: Create a compare arrows icon.
-
+    final arrow = Center(
+      child: RotatedBox(
+        quarterTurns: 1,
+        child: Icon(
+          Icons.compare_arrows,
+          size: 40,
+        ),
+      ),
+    );
     // TODO: Create the 'output' group of widgets. This is a Column that
     // includes the output value, and 'to' unit [Dropdown].
+    final output = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: TextField(
+            keyboardType: TextInputType.number,
+            style: Theme.of(context).textTheme.bodyText1,
+            decoration: InputDecoration(
+                labelText: 'Output',
+                labelStyle: Theme.of(context).textTheme.bodyText1,
+                // errorText:
+                //     _showValidationError ? 'invalid number entered' : null,
+                border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(7))),
+          ),
+        ),
+        SizedBox(
+          height: 25,
+        ),
+        Container(
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(7)),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton(
+              icon: Icon(Icons.arrow_drop_down),
+              value: "1",
+              isExpanded: true,
+              style: const TextStyle(color: Colors.black),
+              onChanged: (String newValue) {
+                setState(() {
+                  dropdownDefaultValue = newValue;
+                });
+              },
+              items: <String>['1', '2', '3', '4']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ],
+    );
 
     // TODO: Return the input, arrows, and output widgets, wrapped in a Column.
 
     // TODO: Delete the below placeholder code.
-    final unitWidgets = widget.units.map((Unit unit) {
-      return Container(
-        color: widget.color,
-        margin: EdgeInsets.all(8.0),
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            Text(
-              unit.name,
-              style: Theme.of(context).textTheme.headline,
-            ),
-            Text(
-              'Conversion: ${unit.conversion}',
-              style: Theme.of(context).textTheme.subhead,
-            ),
-          ],
-        ),
-      );
-    }).toList();
-
-    return ListView(
-      children: unitWidgets,
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          input,
+          SizedBox(height: 15),
+          arrow,
+          SizedBox(height: 15),
+          output
+        ],
+      ),
     );
   }
 }
