@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:flutter/services.dart';
 
 import 'unit.dart';
 
@@ -35,9 +36,27 @@ class ConverterRoute extends StatefulWidget {
 class _ConverterRouteState extends State<ConverterRoute> {
   // TODO: Set some variables, such as for keeping track of the user's input
   // value and units
-  String dropdownDefaultValue = "TestOption";
+  var txtController = TextEditingController();
+  Unit dddValue;
+  Unit dddValue2;
 
   // TODO: Determine whether you need to override anything, such as initState()
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    txtController.dispose();
+    super.dispose();
+  }
+  @override
+  void initState() {
+    super.initState();
+
+    dddValue = widget.units[0];
+    dddValue2 = widget.units[0];
+    // Start listening to changes.
+    txtController.addListener((){});
+  }
 
   // TODO: Add other helper functions. We've given you one, _format()
 
@@ -57,6 +76,19 @@ class _ConverterRouteState extends State<ConverterRoute> {
     return outputNum;
   }
 
+  ///Deny multiple dots after first one
+  String _oneDotOnly(String outputNum){
+    var ch = '.';
+    if(outputNum.contains('.')){
+      if (outputNum.indexOf(ch) != outputNum.lastIndexOf(ch)) {
+        print(outputNum);
+        return outputNum.substring(0, outputNum.length - 1);
+      }
+    }
+    print(outputNum);
+    return outputNum;
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: Create the 'input' group of widgets. This is a Column that
@@ -67,15 +99,34 @@ class _ConverterRouteState extends State<ConverterRoute> {
         Directionality(
           textDirection: TextDirection.ltr,
           child: TextField(
+            controller: txtController,
+            onChanged: (String value){
+              // txtController.text = _oneDotOnly(value);
+            },
+            onSubmitted: (String value){
+              setState(() {
+                txtController.text = _format(double.parse(value));
+              });
+            },
             keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.allow(RegExp('([0-9.])'))],
             style: Theme.of(context).textTheme.bodyText1,
             decoration: InputDecoration(
                 labelText: 'Input',
+                border:  OutlineInputBorder(
+                  borderSide: BorderSide(width: 2, color: Colors.black38),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              focusedBorder:  OutlineInputBorder(
+                borderSide: BorderSide(width: 2, color: widget.color),
+                borderRadius: BorderRadius.circular(10),
+              ),
                 labelStyle: Theme.of(context).textTheme.bodyText1,
+
                 // errorText:
                 //     _showValidationError ? 'invalid number entered' : null,
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(7))),
+
+                ),
           ),
         ),
         SizedBox(
@@ -89,19 +140,18 @@ class _ConverterRouteState extends State<ConverterRoute> {
           child: DropdownButtonHideUnderline(
             child: DropdownButton(
               icon: Icon(Icons.arrow_drop_down),
-              value: "One",
+              value: dddValue,
               isExpanded: true,
               style: const TextStyle(color: Colors.black),
-              onChanged: (String newValue) {
+              onChanged: (Unit newValue) {
                 setState(() {
-                  dropdownDefaultValue = newValue;
+                  dddValue = newValue;
                 });
               },
-              items: <String>['One', 'Two', 'Free', 'Four']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
+              items: widget.units.map<DropdownMenuItem<Unit>>((Unit value) {
+                return DropdownMenuItem<Unit>(
                   value: value,
-                  child: Text(value),
+                  child: Text(value.name),
                 );
               }).toList(),
             ),
@@ -137,8 +187,15 @@ class _ConverterRouteState extends State<ConverterRoute> {
                 labelStyle: Theme.of(context).textTheme.bodyText1,
                 // errorText:
                 //     _showValidationError ? 'invalid number entered' : null,
-                border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(7))),
+              border:  OutlineInputBorder(
+                borderSide: BorderSide(width: 2, color: Colors.black38),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusedBorder:  OutlineInputBorder(
+                borderSide: BorderSide(width: 2, color: widget.color),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
           ),
         ),
         SizedBox(
@@ -152,19 +209,18 @@ class _ConverterRouteState extends State<ConverterRoute> {
           child: DropdownButtonHideUnderline(
             child: DropdownButton(
               icon: Icon(Icons.arrow_drop_down),
-              value: "1",
+              value: dddValue2,
               isExpanded: true,
               style: const TextStyle(color: Colors.black),
-              onChanged: (String newValue) {
+              onChanged: (Unit newValue) {
                 setState(() {
-                  dropdownDefaultValue = newValue;
+                  dddValue2 = newValue;
                 });
               },
-              items: <String>['1', '2', '3', '4']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
+              items: widget.units.map<DropdownMenuItem<Unit>>((Unit value) {
+                return DropdownMenuItem<Unit>(
                   value: value,
-                  child: Text(value),
+                  child: Text(value.name),
                 );
               }).toList(),
             ),
