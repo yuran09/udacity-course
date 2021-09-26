@@ -32,8 +32,8 @@ class _BackdropPanel extends StatelessWidget {
     return Material(
       elevation: 2.0,
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(16.0),
-        topRight: Radius.circular(16.0),
+        topLeft: Radius.circular(19.0),
+        topRight: Radius.circular(19.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
